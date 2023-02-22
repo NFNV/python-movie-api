@@ -9,18 +9,18 @@ movies = [
     {
         "id": 1,
         "title": "Avatar",
-        "overview": "En un exuberante planeta llamado Pandora viven los Na'vi, seres que ...",
+        "overview": "...",
         "year": "2009",
-        "rating": 7.8,
-        "category": "Acción"
+        "rating": 7.9,
+        "category": "action"
     },
     {
         "id": 2,
-        "title": "Avatar 2",
+        "title": "Avatar: The Way of Water",
         "overview": "...",
-        "year": "20XX",
-        "rating": "X",
-        "category": "Acción"
+        "year": "2022",
+        "rating": 7.8,
+        "category": "action"
     },
 ]
 
@@ -38,3 +38,11 @@ def get_movie(id: int):
         if item["id"] == id: return item
     
     return []
+
+@app.get('/movies/', tags=['movies'])
+def get_movies_by_category(category: str):
+    data = []
+    for item in movies: 
+        if item["category"] == category: 
+            data.append(item)
+    return data
