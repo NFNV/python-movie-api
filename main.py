@@ -48,9 +48,9 @@ movies = [
 def message():
     return HTMLResponse('<h1>Hello world!</h1>')
 
-@app.get('/movies', tags=['movies'], response_model=List[Movie])
+@app.get('/movies', tags=['movies'], response_model=List[Movie], status_code=200)
 def get_movies() -> List[Movie]:
-    return JSONResponse(content=movies)
+    return JSONResponse(status_code=200, content=movies)
 
 @app.get('/movies/{id}', tags=['movies'], response_model=Movie)
 def get_movie(id: int = Path(..., ge=1, le=20000)) -> Movie:
@@ -64,23 +64,23 @@ def get_movies_by_category(category: str = Query(..., min_length=3, max_length=1
     data = [item for item in movies if item['category'] == category]
     return JSONResponse(content=data)
 
-@app.post('/movies/', tags=['movies'], response_model=dict)
+@app.post('/movies/', tags=['movies'], response_model=dict, status_code=201)
 def create_movie(movie: Movie) -> dict:
     movies.append(movie.dict())
-    return JSONResponse(content={'message': 'Movie created'})
+    return JSONResponse(status_code=201, content={'message': 'Movie created'})
 
-@app.put('/movies/{id}', tags=['movies'], response_model=dict)
+@app.put('/movies/{id}', tags=['movies'], response_model=dict, status_code=200)
 def update_movie(id: int, movie: Movie) -> dict:
     for item in movies:
         if item["id"] == id:
             item.update(movie.dict())
-            return JSONResponse(content={'message': 'Movie modified'})
-    return JSONResponse(content={'message': 'Movie not found'})
+            return JSONResponse(status_code=200, content={'message': 'Movie modified'})
+    return JSONResponse(status_code=404, content={'message': 'Movie not found'})
 
-@app.delete('/movies/{id}', tags=['movies'], response_model=dict)
+@app.delete('/movies/{id}', tags=['movies'], response_model=dict, status_code=200)
 def delete_movie(id: int) -> dict:
     for item in movies:
         if item['id'] == id:
             movies.remove(item)
-            return JSONResponse(content={'message': 'Movie deleted'})
-    return JSONResponse(content={'message': 'Movie not found'})
+            return JSONResponse(status_code=200, content={'message': 'Movie deleted'})
+    return JSONResponse(status_code=404, content={'message': 'Movie not found'})
